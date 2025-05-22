@@ -1,9 +1,9 @@
 // worker/index.ts
 import { Worker } from "bullmq";
 import IORedis from "ioredis";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import axios from "axios";
-import sqlite3 from "sqlite3";
+import * as sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
 dotenv.config();

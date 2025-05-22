@@ -1,25 +1,47 @@
-
-version: '3.8'
+version: "3.8"
 services:
   api:
-    build: ./api
+    build:
+      context: ./api
     ports:
       - "3000:3000"
+    volumes:
+      - ./api:/app
     environment:
       - REDIS_HOST=redis
-      - REMINDER_LEAD_MINUTES=10
+      - REDIS_PORT=6379
+      - SQLITE_PATH=/data/data.db
     depends_on:
       - redis
+    networks:
+      - backend
 
   worker:
-    build: ./worker
+    build:
+      context: ./worker
+    volumes:
+      - ./worker:/app
     environment:
       - REDIS_HOST=redis
-      - REMINDER_LEAD_MINUTES=10
+      - REDIS_PORT=6379
+      - SQLITE_PATH=/data/data.db
     depends_on:
       - redis
+    networks:
+      - backend
 
   redis:
-    image: redis:6-alpine
+    image: redis:7-alpine
     ports:
       - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - backend
+
+volumes:
+  redis-data:
+
+networks:
+  backend:
+    driver: bridge
