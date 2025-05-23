@@ -33,6 +33,19 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "83b790c7-5537-48e3-95df-1ec3e7b975a9"
+      }
+    },
+    "owner": "curtisdev",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/83b790c7-5537-48e3-95df-1ec3e7b975a9"
     }
   }
 }
