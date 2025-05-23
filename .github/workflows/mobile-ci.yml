@@ -1,0 +1,20 @@
+name: Test Mobile App
+
+on: [push, pull_request]
+
+jobs:
+  test-mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./mobile-app
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run tests
+        run: yarn test
