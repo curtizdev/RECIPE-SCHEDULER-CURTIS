@@ -1,5 +1,4 @@
-import test from "node:test";
-import { expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import { z } from "zod";
 
 const schema = z.object({
@@ -8,17 +7,19 @@ const schema = z.object({
   eventTime: z.string().datetime(),
 });
 
-test("valid payload", () => {
-  const result = schema.safeParse({
-    title: "Test",
-    userId: "user1",
-    eventTime: new Date().toISOString(),
+describe("Event schema validation", () => {
+  it("valid payload", () => {
+    const result = schema.safeParse({
+      title: "Test",
+      userId: "user1",
+      eventTime: new Date().toISOString(),
+    });
+
+    expect(result.success).toBe(true);
   });
 
-  expect(result.success).toBe(true);
-});
-
-test("invalid event payload - missing title", () => {
-  const data = { eventTime: new Date().toISOString() };
-  expect(() => schema.parse(data)).toThrow();
+  it("invalid event payload - missing title", () => {
+    const data = { userId: "user1", eventTime: new Date().toISOString() };
+    expect(() => schema.parse(data)).toThrow();
+  });
 });

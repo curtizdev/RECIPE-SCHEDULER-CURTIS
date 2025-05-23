@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dev": "ts-node src/index.ts"
+    "dev": "ts-node src/index.ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "better-sqlite3": "^11.10.0",
