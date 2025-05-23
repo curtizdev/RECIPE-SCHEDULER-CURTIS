@@ -1,4 +1,4 @@
-name: CI
+name: CI worker
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./api
+        working-directory: ./worker
     services:
       redis:
         image: redis:6
