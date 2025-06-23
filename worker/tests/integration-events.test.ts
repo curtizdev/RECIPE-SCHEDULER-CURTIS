@@ -1,31 +1,36 @@
-import { Worker } from "bullmq";
+import { describe, it, expect } from "vitest";
+import { Worker, Queue } from "bullmq";
 import IORedis from "ioredis";
-import { expect } from "vitest";
-import test from "node:test";
 
-test("worker processes job", async () => {
-  const connection = new IORedis();
-  const queueName = "reminders";
-  const worker = new Worker(
-    queueName,
-    async (job) => {
-      expect(job.data).toHaveProperty("userId");
-      expect(job.data).toHaveProperty("title");
-    },
-    { connection }
-  );
+describe("Worker job processing", () => {
+  it("worker processes job", async () => {
+    const connection = new IORedis({ maxRetriesPerRequest: null });
+    const queueName = "reminders";
 
-  const { Queue } = await import("bullmq");
-  const queue = new Queue(queueName, { connection });
-  await queue.add("test-job", {
-    userId: "test",
-    title: "Notify",
-    eventTime: new Date().toISOString(),
+    const worker = new Worker(
+      queueName,
+      async (job) => {
+        expect(job.data).toHaveProperty("userId");
+        expect(job.data).toHaveProperty("title");
+      },
+      {
+        connection,
+      }
+    );
+
+    const queue = new Queue(queueName, { connection });
+
+    await queue.add("test-job", {
+      userId: "test",
+      title: "Notify",
+      eventTime: new Date().toISOString(),
+    });
+
+    // Give the job time to process
+    await new Promise((res) => setTimeout(res, 500));
+
+    await worker.close();
+    await queue.close();
+    await connection.quit();
   });
-
-  // Wait briefly to let the worker process the job
-  await new Promise((res) => setTimeout(res, 500));
-  await worker.close();
-  await queue.close();
-  await connection.quit();
 });
